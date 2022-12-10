@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="100" />
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/awesome/css/all.css" />
+    <title>ToDo List</title>
+</head>
+<script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js'></script>
+<body>
+    <section>
+        <div class="center">
+            <div class="title item">
+                <div class="number">№</div>
+                <div class="text">Задание </div>
+                <div class="edit">Изменить</div>
+                <div class="del">Удалить</div>
+            </div>
+            {{ range  $_, $e := .Data }}
+            <div class="item">               
+                <div class="number">{{ $e.Id }}</div>
+                <div style="text-align: justify; text-indent: 20px;" class="text">{{ $e.Text }} <span style="float: right; margin-right: 5px;">{{ $e.Date }}</span></div>
+                <div class="edit"><button name="btnsub" class="change" id="{{ $e.Id }}" ><i class="fa-solid fa-pen-to-square"></i></button></div>
+                <div class="del"><button type="submit" class="sub" id="{{ $e.Id }}"><i class="fa-solid fa-delete-left"></i></button></div>
+            </div>
+            {{ end }}
+        </div>
+    </section>
+    <!-- modal window -->
+    <div class="add"><a href="/form"><i class="fa-solid fa-circle-plus"></i></a></div> 
+</body>
+
+<main class="inviz">
+    <form action="form/edit" method="get">
+        <h3 style="text-align: center;">Введите новое задание</h3>
+        <input class="field" type="text" name="textChange">
+        <input type="submit">
+    </form>
+</main>
+
+<script>
+    var clickId = '';
+    let cache = '#';
+    $(document).ready(function(){
+        $('.sub').click(function(e) {
+            clickId = $(this).attr('id');
+            var urls = '/';
+                $.ajax({
+                    url: urls,
+                    type: 'POST',
+                    dataType: 'html',
+                    data : { new_post_data: clickId},
+                    success : function(data) {
+                        $('#result').html(data);
+                    },
+                });
+            alert(new_post_data);
+        });
+    });
+
+    $(document).ready(function(){
+        $('.change').click(function(e) {
+            clickId = $(this).attr('id');
+            var urls = '/';
+                $.ajax({
+                    url: urls,
+                    type: 'GET',
+                    dataType: 'html',
+                    data : { post_data: clickId},
+                    success : function(data) {
+                        $('#result').html(data);
+                    },
+                });
+            alert(post_data);
+        });
+    });
+
+    $('.change').click(function(){
+        var $anchors = $('main');
+        $anchors.toggleClass('viz');
+    });
+
+</script>
+
+</html>
